@@ -79,10 +79,7 @@ import CategoryMenu from "../components/CategoryMenu.vue";
 //import ProductItem from "../components/ProductItem.vue";
 import ClientCard from "../components/ClientCard.vue";
 import TopProducts from "../components/TopProducts.vue";
-<<<<<<< HEAD
 import axios from 'axios'
-=======
->>>>>>> 9fea7c981f866a3925977ba0bcc25dd1af911d0d
 
 
 export default {
@@ -108,14 +105,11 @@ export default {
     ClientCard,
     TopProducts
 },
-<<<<<<< HEAD
   methods: {
     showAllProducts: function(){
       window.location.href = "/products";
     }
   }
-=======
->>>>>>> 9fea7c981f866a3925977ba0bcc25dd1af911d0d
 
 };
 </script>
