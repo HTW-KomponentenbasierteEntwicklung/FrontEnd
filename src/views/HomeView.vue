@@ -90,7 +90,7 @@ export default {
   }),
   mounted () {
     axios
-      .get('http://127.0.0.1:8402/pd/products',{
+      .get('http://localhost:8402/pd/products',{
       headers: {
         'Authorization': `Bearer ${this.$keycloak.token}`
 

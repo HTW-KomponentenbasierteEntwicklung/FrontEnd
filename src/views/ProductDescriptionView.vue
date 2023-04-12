@@ -91,15 +91,9 @@
               <v-row class="my-5">
               
                 <v-col cols="6">
-                  <v-row>
-                  <v-btn icon @click="decrementAmount()"><v-icon>mdi-minus</v-icon></v-btn>
-                  <h3>{{editAmount}}</h3>
-                  <v-btn icon @click="incrementAmount()" ><v-icon>mdi-plus</v-icon></v-btn>
-                  </v-row>
-                  <h4>{{warningText}}</h4>
                 </v-col>
                 <v-col cols="6">
-                  <v-btn rounded large color="purple" dark  elevation="5" @click="addToCart()"> Speichern </v-btn>
+                  <v-btn rounded large color="purple" dark  elevation="5" @click="addToCart()"> Add </v-btn>
                 </v-col>
               </v-row>
             </v-col>
@@ -136,7 +130,7 @@
       }})
       .then(response => {
         this.product = response.data;
-        this.addedItem.productId = this.product.id;
+        this.addedItem.productId = this.product.productId;
         this.addedItem.productname = this.product.name;
         this.addedItem.productPrice = this.product.price;
         this.addedItem.imageLink = this.product.imageLink;
@@ -151,30 +145,13 @@
 
 
       },
-      incrementAmount: function(){
-      if(this.editAmount === this.product.amount){
-        this.warningText = "Only "+this.product.amount+" items left.";
-      }else{
-        this.editAmount++;
-        this.warningText = "";
-      }
-    },
-    decrementAmount: function(){
-      if(this.editAmount === 1){
-        this.warningText = "Amount cannot go under 1."
-      }else{
-        this.editAmount--;
-        this.warningText = "";
-      }
-    },
+      
     closeDialog: function(){
       this.showDialog = false;
     },
     addToCart: function(){
-      this.addedItem.amount = this.editAmount;
-      console.log(this.addedItem);
       axios
-      .post('http://localhost:3030/cart?username='+this.$username, this.addedItem,{
+      .post('http://localhost:8402/cart?username='+this.$username, this.addedItem,{
       headers: {
         'Authorization': `Bearer ${this.$keycloak.token}`
 

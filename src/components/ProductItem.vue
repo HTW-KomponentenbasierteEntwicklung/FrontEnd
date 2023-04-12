@@ -11,7 +11,7 @@
       <v-card
             class="ma-4"
             width="100%"
-            @click="showProductDetails(product.id)"
+            @click="showProductDetails(product.productId)"
           >
           <div align="center" justify="center">
             <v-img

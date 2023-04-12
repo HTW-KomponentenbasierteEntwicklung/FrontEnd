@@ -2,7 +2,7 @@
     <v-list id="cartList" class="mx-5">
             <v-list-item
             v-for="(item, i) in cartItems" :key="i">
-            <v-card class="fullWidth mb-10 rounded-border" elevation="10"  @click="updateItem(item.id)">
+            <v-card class="fullWidth mb-10 rounded-border" elevation="10" >
               <v-row>
                 <v-col cols="3">
                   <v-img :src="item.imageLink"></v-img>
@@ -10,13 +10,10 @@
                 <v-col cols="9">
                   <v-row>
                     <v-col cols="7">
-                     <u > <h2 class="mt-5 alignleft">{{item.productName}}</h2> </u>
-                      <div class="wrapper">
-                        <h4 class="mr-2">Menge:{{item.amount}} </h4>
-
-                      </div>
+                     <u > <h2 class="mt-5 alignleft">{{item.productname}}</h2> </u>
+  
                     </v-col>
-                    <v-col cols="1" class="changeOrderCol pl-2"><v-btn icon><v-icon>mdi-trash-can-outline </v-icon></v-btn> </v-col>
+                    <v-col cols="1" class="changeOrderCol pl-2"><v-btn icon @click="deleteItem(item.id)"><v-icon>mdi-trash-can-outline </v-icon></v-btn> </v-col>
                     <v-col cols="md-4 xs-12">
                       <h2 class="rightAlign mt-10">{{ item.productPrice }} EUR</h2>
                       <h5 class="opacText rightAlign">Inkl. MwSt.</h5>
@@ -37,7 +34,7 @@
   export default {
     props:{
         cartItems: Array,
-        updateItem: Function
+        deleteItem: Function
 },
 methods:{
 

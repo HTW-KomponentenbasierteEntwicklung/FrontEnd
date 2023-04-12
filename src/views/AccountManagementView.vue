@@ -50,6 +50,7 @@
   import OrderManagement from "../components/OrderManagement.vue";
   import Favorite from "@/components/FavoriteList.vue";
   import Vue from "vue";
+  import axios from 'axios';
  export default {
   components: {
       NavBar,
@@ -68,11 +69,9 @@
     ],
         orders: [
               {
-                OrderNr: '#123',
-                Date: "19-12-2021",
-                Status: "In Bearbeitung",
-                Sum: "423.99 € für 2 Artikel",
-                Aktion: "Anzeigen"
+                orderId: '#123',
+                date: "19-12-2021",
+                totalAmount: "423.99 € für 2 Artikel",
               }
               
             ],
@@ -85,7 +84,19 @@
       logout: function(){
         Vue.$keycloak.logout();
       }
-    }}
+    },
+  mounted() {
+    axios
+      .get('http://localhost:8402/order/username/'+this.$username,{
+      headers: {
+        'Authorization': `Bearer ${this.$keycloak.token}`
+
+      }})
+      .then(response => (
+        this.orders = response.data.orders
+        ))
+  }
+  }
   </script>
   <style>
   body {

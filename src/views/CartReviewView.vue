@@ -9,7 +9,7 @@
     </v-row>
     <v-row>
         <v-col cols="lg-8">
-          <CartList :cartItems="cartItems" :updateItem="updateItem"/>
+          <CartList :cartItems="cartItems" :deleteItem="deleteItem"/>
         </v-col>
         <v-col cols="lg-4">
           <v-card elevation="10" class="pt-10 px-10 sticky rounded-border">
@@ -61,42 +61,13 @@
                 </v-row>
               <v-row>
                 <v-col cols="lg-12">
-                  <v-btn color="purple"
+                  <v-btn color="purple" @click="goToCheckOut()"
                       rounded dark x-large class="fullWidth">ZUR KASSE</v-btn>
                 </v-col>
               </v-row>
         </v-card>
         </v-col>
     </v-row>
-    <v-dialog id="cartDialog" v-model="showDialog" class="width50">
-          <div class=" my-10 flex spaceBetween px-10">
-          <h2>Artikel bearbeiten</h2>
-          <v-btn icon @click="closeDialog()"><v-icon>mdi-close</v-icon></v-btn>
-          </div>
-          <v-row class="px-10 pb-10">
-            <v-col cols="4">
-              <div><v-img  :src=toUpdateItem.imageLink class="roundedBorder"></v-img></div>
-            </v-col>
-            <v-col cols="8">
-              <h2>{{toUpdateItem.productname}}</h2>
-              <h1>{{toUpdateItem.productPrice}} EUR</h1>
-              <v-row class="my-5">
-              
-                <v-col cols="6">
-                  <v-row>
-                  <v-btn icon @click="decrementAmount()"><v-icon>mdi-minus</v-icon></v-btn>
-                  <h3>{{editAmount}}</h3>
-                  <v-btn icon @click="incrementAmount()" ><v-icon>mdi-plus</v-icon></v-btn>
-                  </v-row>
-                  <h4>{{warningText}}</h4>
-                </v-col>
-                <v-col cols="6">
-                  <v-btn rounded large color="purple" dark  elevation="5" @click="changeAmount()"> Speichern </v-btn>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-dialog>
     
       </v-container>
     </v-app>
@@ -128,52 +99,10 @@ import axios from "axios";
     ]
   }),
   methods:{
-    updateItem: function(id){
-      this.toUpdateItem = this.cartItems.find(item => item.id === id);
-      this.editAmount = this.toUpdateItem.amount;
-      this.showDialog= true;
-      axios
-      .get('http://localhost:8402/product/'+this.toUpdateItem.productId,{
-      headers: {
-        'Authorization': `Bearer ${this.$keycloak.token}`
 
-      }})
-      .then(response => (
-        this.maxAmount = response.data.amount
-        ))
-    },
-    incrementAmount: function(){
-      if(this.editAmount === this.maxAmount){
-        this.warningText = "Only "+this.maxAmount+" items left.";
-      }else{
-        this.editAmount++;
-        this.warningText = "";
-      }
-    },
-    decrementAmount: function(){
-      if(this.editAmount === 0){
-        this.warningText = "Amount cannot go under 0."
-      }else{
-        this.editAmount--;
-        this.warningText = "";
-      }
-    },
-    changeAmount: function(){
-      axios
-      .put('http://localhost:3030/changeAmount?username='+this.$username, this.toUpdateItem,{
-      headers: {
-        'Authorization': `Bearer ${this.$keycloak.token}`
-      }})
-      .then(() => {
-        this.reloadCart();
-        this.closeDialog();
-      }
-      )
-
-    },
     reloadCart: function(){
       axios
-      .get('http://localhost:3030/cart?username='+this.$username,{
+      .get('http://localhost:8402/cart?username='+this.$username,{
       headers: {
         'Authorization': `Bearer ${this.$keycloak.token}`
 
@@ -181,11 +110,24 @@ import axios from "axios";
       .then(response => {
         this.cartItems = response.data.items;
         this.totalSum = response.data.totalAmount;
-        console.log(this.cartItems);
       })
     },
-    closeDialog: function(){
-      this.showDialog = false;
+    deleteItem: function(id){
+      axios
+      .delete('http://localhost:8402/cart/'+id, {
+      headers: {
+        'Authorization': `Bearer ${this.$keycloak.token}`
+
+      }})
+      .then(response => {
+        this.cartItems = response.data.items;
+        this.totalSum = response.data.totalAmount;
+      })
+      this.reloadCart();
+    },
+    goToCheckOut: function(){
+      window.location.href = "/checkout";
+
     }
   },
   mounted () {

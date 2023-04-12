@@ -23,10 +23,12 @@
         <tbody>
           <tr
             v-for="item in orders"
-            :key="item.OrderNr"
+            :key="item.orderId"
           >
-            <td>{{ item.OrderNr }}</td>
-            <td>{{ item.Date }}</td>
+            <td>{{ item.orderId }}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.totalAmount }}</td>
           </tr>
         </tbody>
       </template>

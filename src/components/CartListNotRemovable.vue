@@ -5,9 +5,9 @@
             <v-card class="fullWidth mb-2 rounded-border" elevation="2"  >
                 <div >
                     <div class=" flex spaceBetween ">
-                        <div class="width20"><v-img :src="item.img"></v-img></div>
-                    <h4 class="mt-5">Crabbe Trabbe</h4>
-                <h5 class="mt-5 mr-2"> {{ item.price }}</h5>
+                        <div class="width20"><v-img :src="item.imageLink"></v-img></div>
+                    <h4 class="mt-5">{{item.productname}}</h4>
+                <h5 class="mt-5 mr-2"> {{ item.productPrice }} €</h5>
                 </div>
                 </div>
               

@@ -179,17 +179,18 @@ methods: {
     this.editable1=false;
     this.editable2= false;
     this.editable3=false;
-    let order = {orderContact: this.orderContact, items: this.cartItems};
+    let order = {orderContact: this.orderContact, items: this.cartItems, totalAmount: this.totalSum};
     axios
-      .post('http://localhost:8402/order',{
+      .post('http://localhost:8402/order?username='+this.$username,order,{
       headers: {
         'Authorization': `Bearer ${this.$keycloak.token}`
 
-      },
-      body: order})
+      }})
       .then(response => (
-        this.OrderNr = response.data.orderRegistry.orderId
+        this.OrderNr = response.data.orderId,
+        this.sendPayment(this.OrderNr)
         ))
+    
 
   },
   step1: function (contact) {
@@ -204,16 +205,28 @@ methods: {
   },
   reloadCart: function(){
       axios
-      .get('http://localhost:8402/cart',{
+      .get('http://localhost:8402/cart?username='+this.$username,{
       headers: {
         'Authorization': `Bearer ${this.$keycloak.token}`
 
       }})
       .then(response => (
-        this.cartItems = response.data.cart.items,
-        this.totalSum = response.data.cart.totalAmount
+        this.cartItems = response.data.items,
+        this.totalSum = response.data.totalAmount
         ))
     },
+  sendPayment: function(orderId){
+    let payment = {orderId: orderId, username: this.$username, amount: this.totalSum, method: this.paymentMethod, status: "PENDING"}
+    axios
+      .post('http://localhost:8402/payment',payment,{
+      headers: {
+        'Authorization': `Bearer ${this.$keycloak.token}`
+
+      }})
+      .then(response => (
+        console.log(response.data)
+        ))
+    }
 },
 mounted() {
   this.reloadCart();
